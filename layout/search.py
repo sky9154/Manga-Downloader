@@ -1,6 +1,6 @@
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFileDialog
-from PyQt6.QtCore import QDir
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFileDialog
+from PySide6.QtCore import QDir
 from widgets import CoverImage, MangaSearch, Button, CheckButton
 from functions import Manga, Config
 
@@ -23,11 +23,11 @@ class SearchLayout(QWidget):
 
     self.manga_search = MangaSearch()
     self.manga_search = self.manga_search.init_ui()
-    self.search_button = Button(config['WIDGET']['BUTTON']['SEARCH'])
+    self.search_button = Button(config["WIDGET"]["BUTTON"]["SEARCH"])
     self.search_button = self.search_button.init_ui()
-    self.download_button = Button(config['WIDGET']['BUTTON']['DOWNLOAD'])
+    self.download_button = Button(config["WIDGET"]["BUTTON"]["DOWNLOAD"])
     self.download_button = self.download_button.init_ui()
-    self.save_as_pdf_button = CheckButton(config['WIDGET']['BUTTON']['PDF'])
+    self.save_as_pdf_button = CheckButton(config["WIDGET"]["BUTTON"]["PDF"])
     self.save_as_pdf_button = self.save_as_pdf_button.init_ui()
 
     self.download_button.setEnabled(False)
@@ -67,18 +67,21 @@ class SearchLayout(QWidget):
     if self.mange.check():
       cover_url = self.mange.get_cover()
 
+      if cover_url.startswith("//"):
+        cover_url = "https:" + cover_url
+
       self.cover_image.set_cover(cover_url)
-      self.window.setWindowTitle(self.config['MESSAGE']['SEARCH']['SUCCESS'])
+      self.window.setWindowTitle(self.config["MESSAGE"]["SEARCH"]["SUCCESS"])
     else:
       self.cover_image.reset_cover()
-      self.window.setWindowTitle(self.config['MESSAGE']['SEARCH']['ERROR'])
+      self.window.setWindowTitle(self.config["MESSAGE"]["SEARCH"]["ERROR"])
 
     self.enabled_button(True)
 
   def download(self):
-    download_folder = os.path.join(QDir.homePath(), 'Downloads')
+    download_folder = os.path.join(QDir.homePath(), "Downloads")
     download_path = QFileDialog.getExistingDirectory(
-        self, self.config['WIDGET']['FILEDIALOG'], download_folder)
+        self, self.config["WIDGET"]["FILEDIALOG"], download_folder)
 
     if download_path:
       self.mange.download(download_path, self.save_as_pdf_state)

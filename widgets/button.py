@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtCore import Qt
+from PySide6.QtWidgets import QPushButton
+from PySide6.QtCore import Qt
 
 
 class Button(QPushButton):
@@ -13,7 +13,7 @@ class Button(QPushButton):
     self.setText(self.name)
     self.setFixedHeight(40)
     self.setCursor(Qt.CursorShape.PointingHandCursor)
-    self.setStyleSheet('''
+    self.setStyleSheet("""
       QPushButton {
         background-color: #3A3A3A;
         border: 2px solid #555555;
@@ -40,7 +40,7 @@ class Button(QPushButton):
         border-color: #666666;
         color: #B0B0B0;
       }
-    ''')
+    """)
 
     return self
 
@@ -57,7 +57,7 @@ class CheckButton(QPushButton):
     self.setFixedHeight(40)
     self.setCursor(Qt.CursorShape.PointingHandCursor)
     self.setCheckable(True)
-    self.setStyleSheet('''
+    self.setStyleSheet("""
       QPushButton {
         background-color: #4A4A4A;
         border: 2px solid #666666;
@@ -84,6 +84,6 @@ class CheckButton(QPushButton):
         border-color: #555555;
         color: #FFFFFF;
       }
-    ''')
+    """)
 
     return self

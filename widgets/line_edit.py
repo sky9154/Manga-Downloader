@@ -1,6 +1,6 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QLineEdit
-from PyQt6.QtGui import QIntValidator
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLineEdit
+from PySide6.QtGui import QIntValidator
 
 
 class MangaSearch(QLineEdit):
@@ -12,12 +12,12 @@ class MangaSearch(QLineEdit):
     self.setFixedHeight(40)
     self.setValidator(QIntValidator())
     self.setCursor(Qt.CursorShape.CustomCursor)
-    self.setStyleSheet('''
+    self.setStyleSheet("""
       background-color: #333333;
       color: #FFFFFF;
       padding: 10px 20px;
       font-size: 14px;
       border-radius: 6px;
-    ''')
+    """)
 
     return self

@@ -1,6 +1,6 @@
 import importlib.resources as resources
-from PyQt6.QtWidgets import QHBoxLayout, QLabel
-from PyQt6.QtGui import QPixmap, QFont
+from PySide6.QtWidgets import QHBoxLayout, QLabel
+from PySide6.QtGui import QPixmap, QFont
 from urllib.request import urlopen
 from assets import images
 
@@ -15,9 +15,9 @@ class CoverImage(QLabel):
 
   def init_ui(self):
     with resources.as_file(resources.files(images) /
-                           'cover.png') as cover_path:
+                           "cover.png") as cover_path:
 
-      with open(cover_path, 'rb') as cover:
+      with open(cover_path, "rb") as cover:
         self.cover_data = cover.read()
 
       cover = QPixmap()
@@ -35,6 +35,9 @@ class CoverImage(QLabel):
       return cover_image
 
   def set_cover(self, cover_url):
+    if cover_url.startswith("//"):
+      cover_url = "https:" + cover_url
+
     cover_data = urlopen(cover_url).read()
 
     cover_image = QPixmap()
@@ -57,7 +60,7 @@ class InfoLabel(QLabel):
     self.value = value
 
   def init_ui(self):
-    self.setText(f'{self.value}：')
+    self.setText(f"{self.value}：")
     self.setFixedHeight(40)
     self.setFont(QFont(self.font().family(), 10))
 
