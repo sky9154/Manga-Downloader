@@ -1,86 +1,79 @@
 # Manga Downloader
 
-Use Python web scraping to download manga from nhentai.net and save it to a specified folder.
+![Manga Downloader](./assets/docs/readme-banner.webp)
 
-## About
+Manga Downloader is a PySide6 desktop application for downloading image galleries from [nhentai.net](https://nhentai.net/) by numeric gallery ID. It previews the cover, derives full-size image URLs from the gallery page, downloads the pages concurrently, and can combine the downloaded images into a PDF.
 
-This project is a Python-based tool designed to automate the process of downloading manga. It utilizes `requests` and `BeautifulSoup` to scrape manga content, retrieving high-quality images from nhentai.net while maintaining the correct page order.
-
-Users can choose to run the script via Python or download the standalone executable file.
-
-- **Releases (EXE)**: [Download latest release](https://github.com/sky9154/MangaDownloader/releases)
-
-- **Repository**: [GitHub Repository](https://github.com/sky9154/MangaDownloader)
-
-## Screenshots
-
-![Demo](/assets/docs/demo.png)
+> The target website contains adult material. Confirm that you meet applicable age and legal requirements, and download only content you are permitted to use.
 
 ## Features
 
-- **Web Scraping**: Retrieves high-quality images from nhentai.net while maintaining the correct page order using requests and BeautifulSoup.
+- Searches for galleries by numeric ID and displays the cover.
+- Extracts gallery titles and image URLs with Beautiful Soup.
+- Downloads multiple images concurrently in a background thread.
+- Saves images in a gallery-specific folder with zero-padded filenames.
+- Creates an optional PDF after the images finish downloading.
 
-- **Download Management**: Downloads manga content as images to a user-defined directory using multithreading for faster performance.
+## Screenshots
 
-- **PDF Conversion**: Allows users to save the downloaded manga automatically as a PDF.
+![Image to PDF Converter Screenshot](assets/docs/screenshot.png)
 
-## Getting Started
+## Setup and run
 
-### Prerequisites
-
-To run the source code, you need:
-
-- Python 3.x
-
-- pip (Python package installer)
-
-_(Note: If you use the executable file from Releases, you do not need to install Python dependencies.)_
-
-### Installation
-
-**1. Clone repo**
+Run these commands from the repository root. The application reads `setting.ini` and creates `app.lock` relative to the current working directory.
 
 ```bash
-git clone https://github.com/sky9154/MangaDownloader.git
+python -m pip install -r requirements.txt
+python app.py
 ```
 
-**2. Install dependencies**
+## Usage
 
-```bash
-pip install -r requirements.txt
+1. Enter a numeric gallery ID.
+2. Select `検索` to load the gallery and preview its cover.
+3. Enable `として保存` if you also want a PDF.
+4. Select `ダウンロード`, then choose an output directory.
+5. Wait until the window title reports that the download is complete.
+
+Downloaded images are stored in a folder named after the gallery:
+
+```text
+<selected-directory>/
+├── <gallery-title>/
+│   ├── 01.<image-extension>
+│   ├── 02.<image-extension>
+│   └── ...
+└── <gallery-title>.pdf
 ```
 
-This command will install required packages like `requests` and `beautifulsoup4`.
+The PDF is created only when the PDF option is enabled.
 
-**3. Configuration (Optional)** You can configure the settings using the setting.ini file:
+## Configuration
+
+Edit `setting.ini` to control download concurrency and delay:
 
 ```ini
-[Download]
+[Dowload]
 max_workers = 3
 delay = 1
 ```
 
-This allows you to set the maximum number of threads (`max_workers`) and the delay between each request (`delay`).
+| Key | Default | Description |
+| --- | ---: | --- |
+| `max_workers` | `3` | Maximum number of concurrent image downloads |
+| `delay` | `1` | Seconds each worker waits after a successful download |
 
-**4. Run application**
-```bash
-python app.py
-```
+## Current limitations
 
-## Folder Structure
-
-```
-MangaDownloader/
-├── assets/
-│   └── images/         # Application resources (icons, cover images)
-├── functions/          # Core logic (downloader, config, threading)
-├── layout/             # UI Layout definitions
-├── widgets/            # Custom UI components (buttons, input fields)
-├── app.py              # Main application entry point
-├── requirements.txt    # Python dependencies
-└── setting.ini         # User configuration settings
-```
+- Gallery parsing depends on the current HTML structure and image URL format used by `nhentai.net`.
+- The search field accepts numeric gallery IDs, not complete URLs.
+- Download failures are printed to the console and are not retried or displayed in the interface.
+- PDF input files come from `os.listdir()` without explicit sorting, so PDF page order may depend on the filesystem.
+- After an HTTP search failure, the current implementation requests gallery `371601` as a fallback before reporting the error. Do not start a download after a failed search.
+- An unexpected shutdown may leave `app.lock` behind and prevent the next launch.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+The source code is available under the MIT License. See [LICENSE](LICENSE) for details.
+
+Downloaded gallery media is not covered by the repository's MIT License. Its use remains subject to the rights of the original creators and the source website's terms.
